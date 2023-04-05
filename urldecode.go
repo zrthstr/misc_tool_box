@@ -9,15 +9,19 @@ import (
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-	input := scanner.Text()
+	for scanner.Scan() {
+		input := scanner.Text()
 
-	decodedInput, err := url.QueryUnescape(input)
+		decodedInput, err := url.QueryUnescape(input)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(1)
+		}
 
-	if err != nil {
+		fmt.Println(decodedInput)
+	}
+	if err := scanner.Err(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
-
-	fmt.Println(decodedInput)
 }

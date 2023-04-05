@@ -5,7 +5,12 @@ build:
 	go build urlencode.go
 
 
-INSTALL_PATH = /home/zrth/.local/bin
+INSTALL_PATH = ~/.local/bin
 install:
 	cp urldecode $(INSTALL_PATH)
 	cp urlencode $(INSTALL_PATH)
+
+
+.PHONY: test
+test:
+	cd test && make test
