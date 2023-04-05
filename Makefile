@@ -6,7 +6,7 @@ build:
 
 
 INSTALL_PATH = ~/.local/bin
-install:
+install: build
 	cp urldecode $(INSTALL_PATH)
 	cp urlencode $(INSTALL_PATH)
 
