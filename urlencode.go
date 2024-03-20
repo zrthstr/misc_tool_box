@@ -1,40 +1,43 @@
 // moderatly stric url encode
 // encodes optional char such as: +
 // does not encode _
+//
+// -a for full encode, of everything
 
 package main
 
 import (
 	"bufio"
+	"flag"
+	"fmt"
 	"net/url"
 	"os"
 )
 
 func main() {
-	err := urlencode(os.Stdin, os.Stdout)
-	if err != nil {
-		os.Exit(1)
+	encodeAll := flag.Bool("a", false, "Encode all characters, including those normally not required")
+	flag.Parse()
+
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		input := scanner.Text()
+		output := encodeInput(input, *encodeAll)
+		fmt.Println(output)
 	}
 }
 
-func urlencode(input *os.File, output *os.File) error {
-	scanner := bufio.NewScanner(input)
-	firstLine := true
-	for scanner.Scan() {
-		encoded := url.QueryEscape(scanner.Text())
-		if firstLine {
-			firstLine = false
-		} else {
-			if _, err := output.WriteString("%0A"); err != nil {
-				return err
-			}
-		}
-		if _, err := output.WriteString(encoded); err != nil {
-			return err
-		}
+func encodeInput(input string, encodeAll bool) string {
+	if encodeAll {
+		return encodeAllChars(input)
 	}
-	if err := scanner.Err(); err != nil {
-		return err
+	// Normal URL encoding
+	return url.QueryEscape(input)
+}
+
+func encodeAllChars(input string) string {
+	var encoded string
+	for i := 0; i < len(input); i++ {
+		encoded += "%" + fmt.Sprintf("%02X", input[i])
 	}
-	return nil
+	return encoded
 }
