@@ -5,7 +5,7 @@ build:
 	go build urlencode.go
 
 
-INSTALL_PATH = ~/.local/bin
+INSTALL_PATH = ~/.local/bin/
 install: build
 	cp urldecode $(INSTALL_PATH)
 	cp urlencode $(INSTALL_PATH)
